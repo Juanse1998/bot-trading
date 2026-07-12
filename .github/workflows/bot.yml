@@ -45,3 +45,5 @@ jobs:
           # Otro run pudo haber commiteado mientras este corría.
           git pull --rebase --autostash origin ${{ github.ref_name }}
           git push
+
+# Bot de paper trading — corre cada 30 min en GitHub Actions.
