@@ -1,0 +1,33 @@
+exchange: yahoo
+symbols:
+  - EURUSD=X
+  - GBPUSD=X
+  - USDJPY=X
+  - AUDUSD=X
+  - USDCAD=X
+  - NZDUSD=X
+  - GC=F      # oro
+  - SI=F      # plata
+  - ^GSPC     # S&P 500
+  - ^NDX      # Nasdaq 100
+timeframe: 1h
+strategy:
+  name: meanrev
+  ema_fast: 20
+  ema_slow: 50
+  ema_trend: 200
+  rsi_period: 14
+  rsi_max_entry: 70
+  rsi_oversold: 35
+  rsi_exit: 55
+  atr_period: 14
+  atr_stop_mult: 2.0
+  atr_target_mult: 2.0
+risk:
+  initial_equity: 500
+  risk_per_trade: 0.005
+  max_position_pct: 3.0
+  fee_pct: 0.0001
+telegram: {token: "", chat_id: ""}
+paper: {state_file: paper_state_multi.json}
+loop: {poll_minutes: 15}

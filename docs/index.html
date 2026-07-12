@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bot de Trading — Paper</title>
+<style>
+  :root {
+    --bg:#f6f7f9; --fg:#111827; --muted:#6b7280; --card:#fff; --line:#e5e7eb;
+    --pos:#16a34a; --neg:#dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --card:#161b22; --line:#30363d; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--fg);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:960px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:22px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px; margin-bottom:24px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .lbl { color:var(--muted); font-size:12px; text-transform:uppercase;
+    letter-spacing:.04em; margin-bottom:6px; }
+  .val { font-size:21px; font-weight:650; font-variant-numeric:tabular-nums; }
+  .pos { color:var(--pos); } .neg { color:var(--neg); }
+  .muted { color:var(--muted); }
+  h2 { font-size:15px; margin:26px 0 10px; }
+  .panel { background:var(--card); border:1px solid var(--line);
+    border-radius:10px; padding:16px; overflow-x:auto; }
+  .chart { width:100%; height:auto; }
+  .chart .grid line { stroke:var(--line); stroke-width:1; }
+  .chart .grid text { fill:var(--muted); font-size:11px; }
+  .chart .base { stroke:var(--muted); stroke-width:1; stroke-dasharray:4 4; opacity:.6; }
+  .chart .baselbl { fill:var(--muted); font-size:11px; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px;
+    font-variant-numeric:tabular-nums; }
+  th { text-align:left; color:var(--muted); font-weight:500; font-size:12px;
+    text-transform:uppercase; letter-spacing:.04em; padding:0 10px 8px 0; }
+  td { padding:9px 10px 9px 0; border-top:1px solid var(--line); }
+  .vacio { color:var(--muted); padding:14px 0; font-size:14px; }
+  footer { margin-top:28px; color:var(--muted); font-size:12px; }
+</style></head><body><div class="wrap">
+  <h1>Bot de Trading — Paper Trading</h1>
+  <div class="sub">
+    10 instrumentos · velas de 1h ·
+    meanrev · riesgo 2% por operación ·
+    capital inicial $2,000
+  </div>
+
+  <div class="cards"><div class="card"><div class="lbl">Equity actual</div><div class="val pos">$2,000.00</div></div><div class="card"><div class="lbl">Resultado</div><div class="val pos">+0.00 USD</div></div><div class="card"><div class="lbl">Retorno</div><div class="val pos">+0.00%</div></div><div class="card"><div class="lbl">Operaciones</div><div class="val ">0</div></div><div class="card"><div class="lbl">Aciertos</div><div class="val ">—</div></div><div class="card"><div class="lbl">Peor caída</div><div class="val ">0.0%</div></div></div>
+
+  <h2>Curva de equity</h2>
+  <div class="panel"><div class="vacio">Todavía no hay suficientes datos para la curva. Aparece cuando el bot lleve unas horas corriendo.</div></div>
+
+  <h2>Posiciones abiertas</h2>
+  <div class="panel"><div class="vacio">Sin posiciones abiertas.</div></div>
+
+  <h2>Últimas operaciones cerradas</h2>
+  <div class="panel"><div class="vacio">Todavía no cerró ninguna operación. La estrategia hace ~15 al mes, así que tené paciencia.</div></div>
+
+  <footer>
+    Actualizado: 2026-07-12 18:46 UTC ·
+    Dinero simulado. Esto mide si el edge sobrevive fuera de muestra.
+  </footer>
+</div></body></html>

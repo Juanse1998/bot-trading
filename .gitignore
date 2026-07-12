@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Caché de ticks de Dukascopy: son cientos de MB y se re-descargan solos.
+.cache/
+
+# Estados de paper trading viejos (el que corre en producción es
+# paper_state_final.json, y ese SÍ se versiona: es el historial del experimento).
+paper_state.json
+paper_state_forex.json
+paper_state_multi.json

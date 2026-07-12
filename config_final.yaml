@@ -1,0 +1,47 @@
+# Configuración final: solo lo que sobrevivió validación fuera de muestra.
+#
+# Decisiones tomadas con evidencia, no por intuición:
+#   - meanrev, no trend      -> trend da -43%/-24% en forex (bot/grid.py)
+#   - solo largos, no cortos -> los cortos pierden -377$ (bot/long_short.py):
+#                               todos estos activos tienen deriva alcista
+#   - sin cripto             -> negativo fuera de muestra en toda estrategia
+#   - objetivo 3x ATR, no 2x -> única mejora que ganó en entreno Y validación;
+#                               cortar en 2x trunca a los ganadores
+#   - las 3 clases juntas    -> cada clase sola es inestable; la combinación
+#                               gana en ambos períodos y le gana a sus partes
+#
+# Ojo: risk_per_trade 2% produce un drawdown de ~-32%. Es real y va a doler.
+
+exchange: yahoo
+symbols:
+  - EURUSD=X
+  - GBPUSD=X
+  - USDJPY=X
+  - AUDUSD=X
+  - USDCAD=X
+  - NZDUSD=X
+  - GC=F      # oro
+  - SI=F      # plata
+  - ^GSPC     # S&P 500
+  - ^NDX      # Nasdaq 100
+timeframe: 1h
+strategy:
+  name: meanrev
+  ema_fast: 20
+  ema_slow: 50
+  ema_trend: 200
+  rsi_period: 14
+  rsi_max_entry: 70
+  rsi_oversold: 35
+  rsi_exit: 55
+  atr_period: 14
+  atr_stop_mult: 2.0
+  atr_target_mult: 3.0     # <- el cambio validado (antes 2.0)
+risk:
+  initial_equity: 2000
+  risk_per_trade: 0.02
+  max_position_pct: 10.0
+  fee_pct: 0.0001          # conservador: el spread real medido es menor
+telegram: {token: "", chat_id: ""}
+paper: {state_file: paper_state_final.json}
+loop: {poll_minutes: 15}

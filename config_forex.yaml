@@ -1,0 +1,41 @@
+# Configuración para operar FOREX con datos de Yahoo Finance.
+# Uso: python -m bot.backtest --config config_forex.yaml
+#      python -m bot.main --config config_forex.yaml
+exchange: yahoo
+symbols:
+  - EURUSD=X
+  - GBPUSD=X
+  - USDJPY=X
+  - AUDUSD=X
+  - USDCAD=X
+  - NZDUSD=X
+timeframe: 1h
+
+strategy:
+  name: meanrev
+  ema_fast: 20
+  ema_slow: 50
+  ema_trend: 200
+  rsi_period: 14
+  rsi_max_entry: 70
+  rsi_oversold: 35
+  rsi_exit: 55
+  atr_period: 14
+  atr_stop_mult: 2.0
+  atr_target_mult: 2.0
+
+risk:
+  initial_equity: 500
+  risk_per_trade: 0.02     # 2% del equity en riesgo por operación
+  max_position_pct: 10.0   # apalancamiento: posición de hasta 10x el equity
+  fee_pct: 0.00005         # el costo en forex es el spread (~1 pip en majors ≈ 0.01% ida y vuelta)
+
+telegram:
+  token: ""
+  chat_id: ""
+
+paper:
+  state_file: paper_state_forex.json
+
+loop:
+  poll_minutes: 15

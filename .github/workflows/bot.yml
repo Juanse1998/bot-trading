@@ -1,0 +1,47 @@
+name: Paper Trading
+
+on:
+  schedule:
+    # Cada 30 minutos. La estrategia opera velas de 1 hora, así que alcanza de
+    # sobra. GitHub suele retrasar los crons bajo carga; con velas de 1h da igual.
+    - cron: "*/30 * * * *"
+  workflow_dispatch:        # botón para correrlo a mano desde la web
+
+# Si un run se demora, que el siguiente espere en vez de pisarle el estado.
+concurrency:
+  group: paper-trading
+  cancel-in-progress: false
+
+permissions:
+  contents: write           # para commitear el estado y el dashboard
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Ejecutar el bot
+        run: python -m bot.main --config config_final.yaml --once
+
+      - name: Generar el dashboard
+        run: python -m bot.dashboard --config config_final.yaml --out docs/index.html
+
+      - name: Guardar estado y dashboard
+        run: |
+          git config user.name  "trading-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add paper_state_final.json docs/index.html
+          # Si no cambió nada (mercado cerrado, sin señales), no hay nada que commitear.
+          git diff --staged --quiet && echo "sin cambios" && exit 0
+          git commit -m "paper: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          # Otro run pudo haber commiteado mientras este corría.
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push

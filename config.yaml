@@ -1,0 +1,44 @@
+# Configuración del bot de trading
+exchange: binance          # exchange de donde se leen los datos (público, no requiere API key)
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+  - BNB/USDT
+  - XRP/USDT
+  - DOGE/USDT
+  - ADA/USDT
+  - LINK/USDT
+timeframe: 1h              # velas de 1 hora: más señales que 4h
+
+strategy:
+  name: meanrev            # "meanrev" (compra caídas, muchas señales) o "trend" (cruce EMAs, pocas)
+  ema_fast: 20
+  ema_slow: 50
+  ema_trend: 200           # solo se abren largos si el precio está sobre esta EMA
+  rsi_period: 14
+  rsi_max_entry: 70        # trend: no entrar si el RSI indica sobrecompra
+  rsi_oversold: 35         # meanrev: entrar cuando el RSI cae debajo de esto
+  rsi_exit: 55             # meanrev: salir cuando el RSI se recupera sobre esto
+  atr_period: 14
+  atr_stop_mult: 2.0       # stop loss = entrada - 2*ATR
+  atr_target_mult: 2.0     # take profit = entrada + 2*ATR
+
+risk:
+  initial_equity: 1000     # capital inicial del paper trading (USD)
+  risk_per_trade: 0.01     # arriesgar 1% del equity por operación
+  max_position_pct: 0.25   # ninguna posición supera el 25% del equity
+  fee_pct: 0.001           # 0.1% por lado (taker de Binance)
+
+# Notificaciones por Telegram (opcional). Si se dejan vacíos, las señales
+# salen solo por consola. Crear bot con @BotFather y obtener el chat_id
+# escribiéndole al bot y consultando https://api.telegram.org/bot<TOKEN>/getUpdates
+telegram:
+  token: ""
+  chat_id: ""
+
+paper:
+  state_file: paper_state.json   # acá se persiste el portafolio simulado
+
+loop:
+  poll_minutes: 15         # cada cuánto revisa si cerró una vela nueva

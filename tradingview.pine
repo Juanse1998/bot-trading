@@ -1,0 +1,50 @@
+//@version=5
+// Port de la estrategia meanrev del bot (config_multi.yaml) para TradingView.
+// Pegar en Pine Editor > aplicar al gráfico en velas de 1 hora.
+// Cuenta como UN solo indicador (EMA/RSI/ATR se calculan adentro): en el plan
+// gratis (límite 2) hay que quitar los demás indicadores del gráfico antes de
+// agregarla.
+// La misma lógica que corre el bot en Python: comprar RSI en sobreventa con
+// tendencia alcista, salir por RSI recuperado, stop o target a 2xATR.
+strategy("Bot MeanRev — RSI + EMA200", overlay = true,
+     initial_capital = 500,
+     currency = currency.USD,
+     commission_type = strategy.commission.percent,
+     commission_value = 0.005,
+     calc_on_every_tick = false)
+
+// === parámetros (idénticos a config_multi.yaml) ===
+emaTrendLen = input.int(200, "EMA de tendencia")
+rsiLen      = input.int(14, "RSI período")
+rsiOversold = input.float(35, "RSI sobreventa (entrada)")
+rsiExit     = input.float(55, "RSI salida")
+atrLen      = input.int(14, "ATR período")
+atrStop     = input.float(2.0, "Stop loss (xATR)")
+atrTarget   = input.float(2.0, "Take profit (xATR)")
+riskPct     = input.float(2.0, "Riesgo por operación (%)") / 100
+maxLeverage = input.float(10.0, "Apalancamiento máx por posición")
+
+emaTrend = ta.ema(close, emaTrendLen)
+rsiVal   = ta.rsi(close, rsiLen)
+atrVal   = ta.atr(atrLen)
+
+enLargo = strategy.position_size > 0
+entrada = not enLargo and close > emaTrend and rsiVal < rsiOversold
+
+if entrada
+    stopDist = atrStop * atrVal
+    qty = strategy.equity * riskPct / stopDist
+    qty := math.min(qty, strategy.equity * maxLeverage / close)
+    strategy.entry("long", strategy.long, qty = qty)
+    strategy.exit("sl/tp", from_entry = "long",
+         stop = close - stopDist, limit = close + atrTarget * atrVal)
+
+if enLargo and rsiVal > rsiExit
+    strategy.close("long", comment = "RSI recuperado")
+
+plot(emaTrend, "EMA 200", color = color.orange)
+plotshape(entrada, style = shape.triangleup, location = location.belowbar,
+     color = color.green, size = size.small, title = "Señal de compra")
+
+alertcondition(entrada, "Señal de compra",
+     "COMPRA {{ticker}} a {{close}} — RSI en sobreventa con tendencia alcista")
